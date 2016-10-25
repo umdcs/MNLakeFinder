@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -11,7 +11,18 @@
     tools:context="edu.umn.coxxx549d.epa_fish_advisory.MainActivity">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
-</RelativeLayout>
+        android:layout_width="171dp"
+        android:layout_height="31dp"
+        android:text="Fish Advisory Information"
+        android:id="@+id/textView"
+        android:layout_y="155dp"
+        android:layout_x="85dp" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="115dp"
+        android:src="@drawable/EPA_Logo"
+        android:layout_x="120dp"
+        android:layout_y="40dp" />
+
+</AbsoluteLayout>
