@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">EPA_Fish_Advisory</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
