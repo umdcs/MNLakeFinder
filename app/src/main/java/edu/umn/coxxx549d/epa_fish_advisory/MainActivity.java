@@ -25,5 +25,9 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
         }
+        else if(button_text.equals("Current Advisories")) {
+            Intent intent = new Intent(this, AdvisoryActivity.class);
+            startActivity(intent);
+        }
     }
 }
