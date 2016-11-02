@@ -29,5 +29,9 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AdvisoryActivity.class);
             startActivity(intent);
         }
+        else if(button_text.equals("Consumption History")) {
+            Intent intent = new Intent(this, ConsumptionActivity.class);
+            startActivity(intent);
+        }
     }
 }

@@ -2,4 +2,5 @@
     <string name="app_name">EPA_Fish_Advisory</string>
     <string name="title_activity_maps">Map</string>
     <string name="Lake">lakeName</string>
+    <string name="consumption_history">Consumption</string>
 </resources>
