@@ -32,12 +32,16 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyBbOrGbvE8Mvu2OcIJKvf0VBJRQpndXtGU" />
 
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".AdvisoryActivity"></activity>
+        <activity android:name=".AdvisoryActivity" />
+        <activity
+            android:name=".ConsumptionActivity"
+            android:label="@string/consumption_history">
+        </activity>
     </application>
 
 </manifest>
