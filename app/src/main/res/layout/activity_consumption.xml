@@ -11,7 +11,14 @@
     tools:context="edu.umn.coxxx549d.epa_fish_advisory.ConsumptionActivity">
 
     <TextView
+        android:id="@+id/consumpTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Consumption History Activity"/>
+
+    <Button
+        android:id="@+id/AddEntryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Entry"/>
 </RelativeLayout>
