@@ -20,5 +20,11 @@
         android:id="@+id/AddEntryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Entry"/>
+        android:text="Add Entry"
+        android:layout_below="@+id/consumpTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="99dp"
+        android:layout_marginStart="99dp"
+        android:layout_marginTop="119dp" />
 </RelativeLayout>
