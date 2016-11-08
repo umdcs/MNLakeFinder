@@ -40,8 +40,8 @@
         <activity android:name=".AdvisoryActivity" />
         <activity
             android:name=".ConsumptionActivity"
-            android:label="@string/consumption_history">
-        </activity>
+            android:label="@string/title_activity_consumption"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

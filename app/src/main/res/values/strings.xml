@@ -3,4 +3,10 @@
     <string name="title_activity_maps">Map</string>
     <string name="Lake">lakeName</string>
     <string name="consumption_history">Consumption</string>
+    <string name="title_activity_consumption">ConsumptionActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
