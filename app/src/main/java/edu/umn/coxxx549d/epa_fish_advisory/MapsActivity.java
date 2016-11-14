@@ -1,6 +1,7 @@
 package edu.umn.coxxx549d.epa_fish_advisory;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -28,6 +29,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -110,11 +113,16 @@ public class MapsActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_main) {//camera->main
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_consumption) {//slideshow->consumption
+            Intent intent = new Intent(this, ConsumptionActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_advisory) {//gallery->advisory
+            Intent intent = new Intent(this, AdvisoryActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_manage) {
 
@@ -164,6 +172,11 @@ public class MapsActivity extends AppCompatActivity
             double latitude = myLocation.getLatitude();
             double longitude = myLocation.getLongitude();
             LatLng latLng = new LatLng(latitude, longitude);
+
+            //GroundOverlayOptions mnMap = new GroundOverlayOptions().image(BitmapDescriptorFactory.
+              //                          fromPath("http://maps1.dnr.state.mn.us/mapcache/gmaps/lakefinder@mn_google/9/48/57.png")).position(latLng, 8600f, 6500f);
+            //nMap.addGroundOverlay(mnMap);
+
             nMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             nMap.animateCamera(CameraUpdateFactory.zoomTo(14));
             mGoogleApiClient.connect();
