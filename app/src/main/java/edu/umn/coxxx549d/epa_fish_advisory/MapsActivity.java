@@ -1,18 +1,23 @@
 package edu.umn.coxxx549d.epa_fish_advisory;
 
-import android.*;
-import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -30,68 +35,120 @@ import java.text.DateFormat;
 import java.util.Date;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback,
-        GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener{
+public class MapsActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback,
+        GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener {
 
-    private GoogleMap mMap;
+    private static GoogleMap nMap;
     private static int LOCATION_PERMISSION_REQUEST_CODE = 1;
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
     Location mCurrentLocation;
     String mLastUpdateTime;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this).addApi(LocationServices.API)
-                .build();
-        if(mGoogleApiClient != null)
-            Log.d("Google API: ", "Connected");
+                .addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
         mLocationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(30 * 1000).setFastestInterval(5 * 1000);
-        if(mLocationRequest != null)
-            Log.d("Location Request: ", "Created");
     }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.maps, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        nMap = googleMap;
         Location myLocation = null;
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            Log.d("PERMISSION STATUS: ", "Not granted yet.");
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                //Show an explanation asynchronously
-            }
-            else {
-                //No explanation needed, we can request the permission
+            Log.d("PERMISSION STATUS", " Not granted yet");
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                //show explanation asynchronously
+            } else {
+                //no explanation needed, we can request the permission
                 //LOCATION_PERMISSION_REQUEST_CODE is passed
-                Log.d("PERMISSION CHECK:", " Going to request permissions....");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                Log.d("PERMISSION CHECK", " Going to request permissions...");
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         LOCATION_PERMISSION_REQUEST_CODE);
+            }//END ELSE
 
-            }//end else
-        }
-        else {
-            Log.d("PERMISSION STATUS: ", "Granted.");
+        } else {
+            Log.d("PERMISSION STATUS", " Granted.");
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             Criteria criteria = new Criteria();
             String provider = locationManager.getBestProvider(criteria, true);
@@ -103,18 +160,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
 
-            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            nMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             double latitude = myLocation.getLatitude();
             double longitude = myLocation.getLongitude();
             LatLng latLng = new LatLng(latitude, longitude);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
-            mGoogleApiClient.connect(); //Call onConnected for location updates
+            nMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            nMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+            mGoogleApiClient.connect();
 
-            //Change title to name of lake on dropped pin
-            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
-                    .title("You are here.").snippet("Consider yourself located."));
-        }//end else
+            nMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
+                    .title("You're here.").snippet("You're located."));
+
+        }
     }
 
     /**
@@ -135,7 +192,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     //Permission Granted, do what you gotta do
                     try {
-                        mMap.setMyLocationEnabled(true);
+                        nMap.setMyLocationEnabled(true);
                     }
                     catch(SecurityException e) {
                         Log.d("Caught ", "Security Exception " + e);
@@ -145,7 +202,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     //Permission Denied, Disable functionality that depends of this permission
                     try {
-                        mMap.setMyLocationEnabled(false);
+                        nMap.setMyLocationEnabled(false);
                     }
                     catch(SecurityException e) {
                         Log.d("Caught ", "Security Exception " + e);
@@ -165,7 +222,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onConnected(Bundle connectionHint) {
 
         boolean mRequestingLocationUpdates;
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mRequestingLocationUpdates = true;
         }
@@ -237,7 +294,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onResume() {
         super.onResume();
         boolean mRequestingLocationUpdates;
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mRequestingLocationUpdates = true;
         }
