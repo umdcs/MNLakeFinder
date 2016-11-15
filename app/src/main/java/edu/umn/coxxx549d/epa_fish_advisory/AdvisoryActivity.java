@@ -3,19 +3,16 @@ package edu.umn.coxxx549d.epa_fish_advisory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -27,7 +24,13 @@ public class AdvisoryActivity extends AppCompatActivity {
     EditText lakeSearch;
     TextView info;
     TextView lake;
+    // API by name
     static final String API_URL = "HTTP://services.dnr.state.mn.us/api/lakefinder/by_name/v1?name=";
+    //API by lat,long
+//    static final String API_URL = "http://services.dnr.state.mn.us/api/lakefinder/by_point/v1?lat=";
+//    static final String API_URL2 = "&lon=";
+    // API by id
+//    static final String API_URL = "http://services.dnr.state.mn.us/api/lakefinder/by_id/v1?id=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class AdvisoryActivity extends AppCompatActivity {
 
             try {
                 URL url = new URL(API_URL + lakeName);
+             //   URL url = new URL (API_URL + lat + API_URL2 + lon);
 
                 Log.i("URL", url.toString());
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -99,16 +103,8 @@ public class AdvisoryActivity extends AppCompatActivity {
 
             try {
                 JSONObject object = new JSONObject(response);
-                String results = object.getString("results");
-               // object = new JSONObject(results);
-                String resources = object.getString("status");
-                Log.i("resources", resources);
-//                int likelihood = object.getInt("likelihood");
-//                JSONArray photos = object.getJSONArray("photos");
-//                .
-//                .
-//                .
-//                .
+                String status = object.getString("results");
+                Log.i("status", status);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
