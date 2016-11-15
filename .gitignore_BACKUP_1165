@@ -7,6 +7,9 @@
 /build
 /captures
 .externalNativeBuild
-.idea
+<<<<<<< HEAD
 *~
-
+=======
+.idea/encodings.xml
+.idea
+>>>>>>> 9130eb8db67bdb905e2bf12719275e5185ffff47

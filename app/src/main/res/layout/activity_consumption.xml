@@ -39,3 +39,4 @@
         app:menu="@menu/activity_consumption_drawer" />
 
 </android.support.v4.widget.DrawerLayout>
+

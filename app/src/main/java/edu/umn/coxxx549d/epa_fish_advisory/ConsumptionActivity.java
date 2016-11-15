@@ -2,9 +2,7 @@ package edu.umn.coxxx549d.epa_fish_advisory;
 
 
 import android.annotation.TargetApi;
-import android.icu.text.NumberFormat;
 import android.icu.util.Calendar;
-import android.icu.util.GregorianCalendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,18 +18,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CalendarView;
-import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
+
 import java.util.Date;
-import java.util.Formatter;
 
 public class ConsumptionActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
