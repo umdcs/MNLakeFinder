@@ -32,10 +32,18 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.android.gms.maps.model.TileProvider;
+import com.google.android.gms.maps.model.UrlTileProvider;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 
 public class MapsActivity extends AppCompatActivity
@@ -73,6 +81,7 @@ public class MapsActivity extends AppCompatActivity
                 .addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
         mLocationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(30 * 1000).setFastestInterval(5 * 1000);
+
     }
 
     @Override
@@ -142,21 +151,57 @@ public class MapsActivity extends AppCompatActivity
         nMap = googleMap;
         Location myLocation = null;
 
+        TileProvider tileProvider = new UrlTileProvider(256, 256) {
+            @Override
+            public URL getTileUrl(int x, int y, int zoom) {
+                zoom = 10;
+                x = 249;
+                y = 356;
+                String s = String.format(Locale.US, "http://maps1.dnr.state.mn.us/mapcache/gmaps/lakefinder@mn_google/%d/%d/%d.png",
+                        zoom, x, y);
+
+                if(!checkTileExists(x, y, zoom)) {
+                    Log.d("Tile Check", "Tile does not exist.");
+                    return null;
+                }
+                try {
+                    return new URL(s);
+                } catch (MalformedURLException e) {
+                    throw new AssertionError(e);
+                }
+            }
+            private boolean checkTileExists(int x, int y, int zoom) {
+                int minZoom = 8;
+                int maxZoom = 16;
+
+                if((zoom < minZoom || zoom > maxZoom)) {
+                    return false;
+                }
+                return true;
+            }
+        };
+
+
+        TileOverlay tileOverlay = nMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
+        tileOverlay.setTransparency(0.5f);
+        tileOverlay.setFadeIn(true);
+
+
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            Log.d("PERMISSION STATUS", " Not granted yet");
+
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
                 //show explanation asynchronously
             } else {
                 //no explanation needed, we can request the permission
                 //LOCATION_PERMISSION_REQUEST_CODE is passed
-                Log.d("PERMISSION CHECK", " Going to request permissions...");
+
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         LOCATION_PERMISSION_REQUEST_CODE);
             }//END ELSE
 
         } else {
-            Log.d("PERMISSION STATUS", " Granted.");
+
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             Criteria criteria = new Criteria();
             String provider = locationManager.getBestProvider(criteria, true);
@@ -173,12 +218,11 @@ public class MapsActivity extends AppCompatActivity
             double longitude = myLocation.getLongitude();
             LatLng latLng = new LatLng(latitude, longitude);
 
-            //GroundOverlayOptions mnMap = new GroundOverlayOptions().image(BitmapDescriptorFactory.
-              //                          fromPath("http://maps1.dnr.state.mn.us/mapcache/gmaps/lakefinder@mn_google/9/48/57.png")).position(latLng, 8600f, 6500f);
-            //nMap.addGroundOverlay(mnMap);
 
             nMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             nMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+            float zoomLvl = getZoomLevel(nMap);
+
             mGoogleApiClient.connect();
 
             nMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
@@ -191,33 +235,31 @@ public class MapsActivity extends AppCompatActivity
      * Handles permission requests inside the Android Manifest.
      * Sets appropriate instructions for permission denied or permission
      * granted.
-     * @param requestCode Code for specific request
-     * @param permissions Permissions that are requesting to be granted
+     *
+     * @param requestCode  Code for specific request
+     * @param permissions  Permissions that are requesting to be granted
      * @param grantResults Result of the user's response to permission request
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        Log.d("onRequestPermission", "....");
-        switch(requestCode) {
+
+        switch (requestCode) {
             case 1: {
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     //Permission Granted, do what you gotta do
                     try {
                         nMap.setMyLocationEnabled(true);
-                    }
-                    catch(SecurityException e) {
+                    } catch (SecurityException e) {
                         Log.d("Caught ", "Security Exception " + e);
                     }
-                }
-                else {
+                } else {
 
                     //Permission Denied, Disable functionality that depends of this permission
                     try {
                         nMap.setMyLocationEnabled(false);
-                    }
-                    catch(SecurityException e) {
+                    } catch (SecurityException e) {
                         Log.d("Caught ", "Security Exception " + e);
                     }
                 }//end else
@@ -230,36 +272,37 @@ public class MapsActivity extends AppCompatActivity
     /**
      * Handles .connect() calls
      * Determines if location updates are available for use.
+     *
      * @param connectionHint Details on connection status
      */
     public void onConnected(Bundle connectionHint) {
 
         boolean mRequestingLocationUpdates;
-        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mRequestingLocationUpdates = true;
-        }
-        else
+        } else
             mRequestingLocationUpdates = false;
 
-        if(mRequestingLocationUpdates) {
+        if (mRequestingLocationUpdates) {
             startLocationUpdates();
         }
     }
+
     protected void startLocationUpdates() {
         //mLocationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
         //.setInterval(30 * 1000).setFastestInterval(5 * 1000);
         try {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        }
-        catch(SecurityException e) {
-            Log.e("Caught"," Security exception" + e);
+        } catch (SecurityException e) {
+            Log.e("Caught", " Security exception" + e);
         }
     }
 
     /**
      * Handles location changes while user is in the
      * Map activity.
+     *
      * @param location Current location
      */
     @Override
@@ -277,6 +320,7 @@ public class MapsActivity extends AppCompatActivity
      * Implements abstract method from ...
      * Handles a suspended connection when the
      * connection is not needed.
+     *
      * @param x Flag to indicate a suspended connection
      */
     public void onConnectionSuspended(int x) {
@@ -287,6 +331,7 @@ public class MapsActivity extends AppCompatActivity
      * Implements abstract method from
      * onConnectionFailedListener. Handles
      * failed connections to GPS/Service provider
+     *
      * @param result the result of the connection
      */
     public void onConnectionFailed(ConnectionResult result) {
@@ -307,14 +352,21 @@ public class MapsActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
         boolean mRequestingLocationUpdates;
-        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mRequestingLocationUpdates = true;
-        }
-        else
+        } else
             mRequestingLocationUpdates = false;
-        if(mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
+        if (mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
             startLocationUpdates();
         }
+    }
+
+    public float getZoomLevel(GoogleMap gMap) {
+        gMap = nMap;
+
+        float zoomLvl = gMap.getCameraPosition().zoom;
+
+        return zoomLvl;
     }
 }
