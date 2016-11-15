@@ -7,6 +7,6 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
+    <string name="calendar">Add Entry</string>
     <string name="action_settings">Settings</string>
 </resources>

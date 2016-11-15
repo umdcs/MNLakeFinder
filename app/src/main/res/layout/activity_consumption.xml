@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,9 +19,18 @@
 
         <CalendarView
             android:id="@+id/calendar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
         </CalendarView>
+
+        <Button
+            android:id="@+id/addentry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/calendar"
+            android:layout_centerHorizontal="true"
+            android:layout_allignParentBottom="true"/>
+
     </LinearLayout>
 
     <include
@@ -36,7 +45,9 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_consumption"
-        app:menu="@menu/activity_consumption_drawer" />
+        app:menu="@menu/activity_consumption_drawer" >
+
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>
 
