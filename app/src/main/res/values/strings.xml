@@ -3,4 +3,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="Lake">lakeName</string>
     <string name="consumption_history">Consumption</string>
+    <string name="title_activity_drawer">DrawerActivity</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
