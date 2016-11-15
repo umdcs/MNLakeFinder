@@ -154,9 +154,7 @@ public class MapsActivity extends AppCompatActivity
         TileProvider tileProvider = new UrlTileProvider(256, 256) {
             @Override
             public URL getTileUrl(int x, int y, int zoom) {
-                zoom = 10;
-                x = 249;
-                y = 356;
+
                 String s = String.format(Locale.US, "http://maps1.dnr.state.mn.us/mapcache/gmaps/lakefinder@mn_google/%d/%d/%d.png",
                         zoom, x, y);
 
