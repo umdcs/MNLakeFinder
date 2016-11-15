@@ -97,18 +97,24 @@ public class AdvisoryActivity extends AppCompatActivity {
             // TODO: check this.exception
             // TODO: do something with the feed
 
-//            try {
-//                JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
-//                String requestID = object.getString("requestId");
+            try {
+                JSONObject object = new JSONObject(response);
+                String results = object.getString("results");
+               // object = new JSONObject(results);
+                String resources = object.getString("status");
+                Log.i("resources", resources);
 //                int likelihood = object.getInt("likelihood");
 //                JSONArray photos = object.getJSONArray("photos");
 //                .
 //                .
 //                .
 //                .
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
+
+
+//{"status":"OK","results":[{"resources":{"fca":1,"lakeSurvey":1,"specialFishingRegs":1,"waterQuality":1,"waterLevels":1,"lakeMap":1,"waterAccess":1,"fishStocking":1},"fishSpecies":["black crappie","bluegill","brown bullhead","hybrid sunfish","largemouth bass","northern pike","pumpkinseed","rock bass","smallmouth bass","sunfish","tullibee (cisco)","walleye","yellow bullhead","yellow perch","bowfin (dogfish)","white sucker","banded killifish","blackchin shiner","blacknose shiner","bluntnose minnow","brook stickleback","central mudminnow","common shiner","golden shiner","Iowa darter","Johnny darter","mimic shiner","mottled sculpin"],"specialFishingRegs":[{"regs":[{"text":"All from 24-36\" must be immediately released. One over 36\" allowed in possession.","species":["Northern Pike"]}],"location":"","locDisplayType":1}],"mapid":["B0025"],"name":"Beltrami","border":"","apr_ids":["1738"],"point":{"epsg:26915":[363550,5272840],"epsg:4326":[-94.815049,47.594603]},"bbox":{"epsg:26915":[361182,5271744,365918,5273936],"epsg:4326":[-94.846878,47.584245,-94.78323,47.604953]},"notes":"","nearest_town":"Bemidji","invasiveSpecies":[],"id":"04013500","county":"Beltrami","pca_id":"04-0135-00"}],"message":""}
