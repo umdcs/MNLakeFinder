@@ -41,7 +41,10 @@
         <activity android:name=".AdvisoryActivity" />
         <activity
             android:name=".ConsumptionActivity"
-            android:label="@string/consumption_history"></activity>
+            android:label="@string/consumption_history"
+            android:theme="@style/AppTheme.NoActionBar">
+	</activity>
+
     </application>
 
 </manifest>
