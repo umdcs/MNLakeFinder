@@ -1,5 +1,7 @@
 package edu.umn.coxxx549d.epa_fish_advisory;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.AsyncTask;
@@ -105,23 +107,33 @@ public class AdvisoryActivity extends AppCompatActivity {
             // TODO: do something with the feed
 
             try {
-    //            JSONObject object = new JSONObject(response);
-  //              String status = object.getString("results");
-   //             JSONArray array = new JSONArray(response);
-   //             JSONArray results = object.getJSONArray("results");
-    //            String fish = results.getString()
-    //            Log.i("status", status);
-     //           Log.i("fish", fish);
                 JSONObject jsonObj = new JSONObject(response);
                 JSONArray results = jsonObj.getJSONArray("results");
+
 
                 for (int i = 0; i < results.length(); i++) {
                     JSONObject c = results.getJSONObject(i);
 
-                    String id = c.getString("fishSpecies");
+                    String fish = c.getString("fishSpecies");
 
-                    Log.i("id", id);
-                    info.setText(id);
+                    Log.i("fish", fish);
+                    info.setText(fish);
+
+                    JSONObject resources = c.getJSONObject("resources");
+                    String fca = resources.getString("fca");
+                    Log.i("fca", fca);
+                    if(fca == "1") {
+                        AlertDialog alertDialog = new AlertDialog.Builder(AdvisoryActivity.this).create();
+                        alertDialog.setTitle("Alert");
+                        alertDialog.setMessage("There is a fish consumption advisory for this lake.");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+                    }
                 }
 
             } catch (JSONException e) {
