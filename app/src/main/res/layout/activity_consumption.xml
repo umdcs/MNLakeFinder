@@ -20,19 +20,23 @@
         <CalendarView
             android:id="@+id/calendar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp">
         </CalendarView>
 
-        <Button
-            android:id="@+id/addentry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/calendar"
-            android:layout_centerHorizontal="true"
-            android:layout_allignParentBottom="true"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Button
+                android:id="@+id/addentry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/calendar"
+                android:layout_centerHorizontal="true">
+            </Button>
+        </RelativeLayout>
 
     </LinearLayout>
-
     <include
         layout="@layout/app_bar_consumption"
         android:layout_width="match_parent"

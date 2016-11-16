@@ -3,6 +3,7 @@ package edu.umn.coxxx549d.epa_fish_advisory;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,10 +29,12 @@ import com.roomorama.caldroid.CaldroidListener;
 
 import java.util.Date;
 
+@TargetApi(Build.VERSION_CODES.N)
 public class ConsumptionActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     CalendarView calendar;
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -67,51 +70,42 @@ public class ConsumptionActivity extends AppCompatActivity
             }
         });*/
 
-        CaldroidFragment caldroidFragment = new CaldroidFragment();
-        Bundle args = new Bundle();
-        Calendar cal = Calendar.getInstance();
-        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
-        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
-        caldroidFragment.setArguments(args);
-
-        FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-        t.replace(R.id.calendar, caldroidFragment);
-        t.commit();
-
-        final CaldroidListener listener = new CaldroidListener() {
-
-            @Override
-            public void onSelectDate(Date date, View view) {
-                Toast.makeText(getApplicationContext(), "" + date,
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onChangeMonth(int month, int year) {
-                String text = "month: " + month + " year: " + year;
-                Toast.makeText(getApplicationContext(), text,
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onLongClickDate(Date date, View view) {
-                Toast.makeText(getApplicationContext(),
-                        "Long click " + date,
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCaldroidViewCreated() {
-                Toast.makeText(getApplicationContext(),
-                        "Caldroid view is created",
-                        Toast.LENGTH_SHORT).show();
-            }
-
-        };
-
-        caldroidFragment.setCaldroidListener(listener);
 
         Button calButton = (Button) findViewById(R.id.addentry);
+        calButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CaldroidFragment caldroidFragment = new CaldroidFragment();
+                Bundle args = new Bundle();
+                Calendar cal = Calendar.getInstance();
+                args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+                args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+                caldroidFragment.setArguments(args);
+
+                FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+                t.replace(R.id.calendar, caldroidFragment);
+                t.commit();
+
+                final CaldroidListener listener = new CaldroidListener() {
+
+                    @Override
+                    public void onSelectDate(Date date, View view) {
+                        Toast.makeText(getApplicationContext(), formatter.format(date),
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onLongClickDate(Date date, View view) {
+                        Toast.makeText(getApplicationContext(),
+                                "Long click " + formatter.format(date),
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                };
+
+                caldroidFragment.setCaldroidListener(listener);
+            }
+        });
     }
 
 
