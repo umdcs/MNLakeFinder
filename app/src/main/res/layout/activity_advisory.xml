@@ -11,17 +11,15 @@
     tools:context="edu.umn.coxxx549d.epa_fish_advisory.AdvisoryActivity">
 
     <TextView
-        android:text="Current Advisories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/title"
+        android:id="@+id/lake"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="54dp"
         android:textSize="36sp"
-        android:textStyle="normal|bold"
-        android:fontFamily="sans-serif" />
+        android:textStyle="normal|bold" />
 
     <EditText
         android:layout_width="match_parent"
@@ -30,38 +28,24 @@
         android:layout_alignParentTop="true"
         android:id="@+id/lakeSearch"
         android:inputType="textPersonName"
-        android:layout_alignRight="@+id/lakeName"
-        android:layout_alignEnd="@+id/lakeName"
         android:hint="Search Lake" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:id="@+id/lakeName"
-        android:text="@string/Lake"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="24sp"
-        android:layout_below="@+id/title"
-        android:layout_centerHorizontal="true" />
 
     <Button
         android:text="Search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonSearch"
+        android:id="@+id/searchButton"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="match_parent"
-        android:id="@+id/Advisory"
+        android:id="@+id/info"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:layout_height="300dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:text="Unrestricted" />
+        android:layout_height="350dp" />
 
 </RelativeLayout>
