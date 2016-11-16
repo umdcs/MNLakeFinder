@@ -181,7 +181,7 @@ public class MapsActivity extends AppCompatActivity
 
 
         TileOverlay tileOverlay = nMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
-        tileOverlay.setTransparency(0.5f);
+        tileOverlay.setTransparency(0.3f);
         tileOverlay.setFadeIn(true);
 
 
