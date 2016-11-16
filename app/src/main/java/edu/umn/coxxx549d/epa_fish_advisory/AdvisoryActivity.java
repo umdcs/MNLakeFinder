@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -18,6 +19,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import static android.icu.lang.UCharacter.toUpperCase;
 
 public class AdvisoryActivity extends AppCompatActivity {
 
@@ -96,15 +99,31 @@ public class AdvisoryActivity extends AppCompatActivity {
                 response = "THERE WAS AN ERROR";
             }
             Log.i("INFO", response);
-            lake.setText(lakeSearch.getText().toString());
-            info.setText(response);
+            lake.setText(toUpperCase(lakeSearch.getText().toString()));
+
             // TODO: check this.exception
             // TODO: do something with the feed
 
             try {
-                JSONObject object = new JSONObject(response);
-                String status = object.getString("results");
-                Log.i("status", status);
+    //            JSONObject object = new JSONObject(response);
+  //              String status = object.getString("results");
+   //             JSONArray array = new JSONArray(response);
+   //             JSONArray results = object.getJSONArray("results");
+    //            String fish = results.getString()
+    //            Log.i("status", status);
+     //           Log.i("fish", fish);
+                JSONObject jsonObj = new JSONObject(response);
+                JSONArray results = jsonObj.getJSONArray("results");
+
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject c = results.getJSONObject(i);
+
+                    String id = c.getString("fishSpecies");
+
+                    Log.i("id", id);
+                    info.setText(id);
+                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
