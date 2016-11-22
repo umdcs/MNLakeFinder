@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,12 +22,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
 
+import java.lang.reflect.Array;
 import java.util.Date;
 
 @TargetApi(Build.VERSION_CODES.N)
@@ -35,6 +38,8 @@ public class ConsumptionActivity extends AppCompatActivity
 
     CalendarView calendar;
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    private TextView[] eventItems = new TextView[] {};
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -43,6 +48,8 @@ public class ConsumptionActivity extends AppCompatActivity
         setContentView(R.layout.activity_consumption);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +69,36 @@ public class ConsumptionActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        CaldroidFragment caldroidFragment = new CaldroidFragment();
+        Bundle args = new Bundle();
+        Calendar cal = Calendar.getInstance();
+        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+        caldroidFragment.setArguments(args);
+
+        FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+        t.replace(R.id.calendar, caldroidFragment);
+        t.commit();
+
+        final CaldroidListener listener = new CaldroidListener() {
+
+            @Override
+            public void onSelectDate(Date date, View view) {
+                Toast.makeText(getApplicationContext(), formatter.format(date),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLongClickDate(Date date, View view) {
+                Toast.makeText(getApplicationContext(),
+                        "Long click " + formatter.format(date),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+        };
+
+        caldroidFragment.setCaldroidListener(listener);
+
         /*calendar = (CalendarView) findViewById(R.id.calendar);
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -75,35 +112,10 @@ public class ConsumptionActivity extends AppCompatActivity
         calButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CaldroidFragment caldroidFragment = new CaldroidFragment();
-                Bundle args = new Bundle();
-                Calendar cal = Calendar.getInstance();
-                args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
-                args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
-                caldroidFragment.setArguments(args);
-
-                FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-                t.replace(R.id.calendar, caldroidFragment);
-                t.commit();
-
-                final CaldroidListener listener = new CaldroidListener() {
-
-                    @Override
-                    public void onSelectDate(Date date, View view) {
-                        Toast.makeText(getApplicationContext(), formatter.format(date),
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onLongClickDate(Date date, View view) {
-                        Toast.makeText(getApplicationContext(),
-                                "Long click " + formatter.format(date),
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                };
-
-                caldroidFragment.setCaldroidListener(listener);
+                builder.setTitle("Add Event");
+                builder.set
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
     }
@@ -166,4 +178,6 @@ public class ConsumptionActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

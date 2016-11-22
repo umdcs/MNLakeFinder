@@ -227,6 +227,12 @@ public class MapsActivity extends AppCompatActivity
                     .title("You're here.").snippet("You're located."));
 
         }
+        //zoom to minnesota if permission not granted
+        double latitude = 46.3527;
+        double longitude = -94.2020;
+        LatLng latLng = new LatLng(latitude, longitude);
+        nMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        nMap.animateCamera(CameraUpdateFactory.zoomTo(6));
     }
 
     /**
