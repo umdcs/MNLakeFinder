@@ -1,6 +1,7 @@
 package edu.umn.coxxx549d.epa_fish_advisory;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -53,6 +54,11 @@ public class AdvisoryActivity extends AppCompatActivity {
                 new RetrieveFeedTask().execute();
             }
         });
+    }
+
+    public void track(View view) {
+        Intent intent = new Intent(this, ConsumptionActivity.class);
+        startActivity(intent);
     }
 
     class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
