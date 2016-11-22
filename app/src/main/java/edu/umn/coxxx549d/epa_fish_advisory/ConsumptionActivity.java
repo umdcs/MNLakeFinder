@@ -38,7 +38,7 @@ public class ConsumptionActivity extends AppCompatActivity
 
     CalendarView calendar;
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
-    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
     private TextView[] eventItems = new TextView[] {};
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -48,6 +48,7 @@ public class ConsumptionActivity extends AppCompatActivity
         setContentView(R.layout.activity_consumption);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 
 
@@ -113,7 +114,7 @@ public class ConsumptionActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 builder.setTitle("Add Event");
-                builder.set
+                //builder.set
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
