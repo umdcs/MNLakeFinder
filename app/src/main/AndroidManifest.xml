@@ -41,7 +41,10 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data android:name="android.app.searchable"
+                android:resource="@layout/searchable" />
+        </activity>
     </application>
 
 </manifest>

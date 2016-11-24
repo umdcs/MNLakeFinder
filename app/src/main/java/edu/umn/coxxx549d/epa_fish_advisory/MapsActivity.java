@@ -1,5 +1,6 @@
 package edu.umn.coxxx549d.epa_fish_advisory;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,13 +13,17 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -98,6 +103,13 @@ public class MapsActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.maps, menu);
+        getMenuInflater().inflate(R.menu.options_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
         return true;
     }
 
@@ -159,7 +171,6 @@ public class MapsActivity extends AppCompatActivity
                         zoom, x, y);
 
                 if(!checkTileExists(x, y, zoom)) {
-                    Log.d("Tile Check", "Tile does not exist.");
                     return null;
                 }
                 try {
@@ -193,7 +204,6 @@ public class MapsActivity extends AppCompatActivity
             } else {
                 //no explanation needed, we can request the permission
                 //LOCATION_PERMISSION_REQUEST_CODE is passed
-
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         LOCATION_PERMISSION_REQUEST_CODE);
             }//END ELSE
@@ -210,19 +220,22 @@ public class MapsActivity extends AppCompatActivity
                 System.out.println("Caught Security Exception: " + e);
             }
 
+            //satellite view works better with the lake depth overlay
+            nMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
-            nMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            //get current location
             double latitude = myLocation.getLatitude();
             double longitude = myLocation.getLongitude();
             LatLng latLng = new LatLng(latitude, longitude);
 
-
+            //move camera to current location
             nMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             nMap.animateCamera(CameraUpdateFactory.zoomTo(14));
-            float zoomLvl = getZoomLevel(nMap);
 
+            //connect api client for location updates
             mGoogleApiClient.connect();
 
+            //drop marker on current location
             nMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
                     .title("You're here.").snippet("You're located."));
 
@@ -358,13 +371,5 @@ public class MapsActivity extends AppCompatActivity
         if (mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
             startLocationUpdates();
         }
-    }
-
-    public float getZoomLevel(GoogleMap gMap) {
-        gMap = nMap;
-
-        float zoomLvl = gMap.getCameraPosition().zoom;
-
-        return zoomLvl;
     }
 }
