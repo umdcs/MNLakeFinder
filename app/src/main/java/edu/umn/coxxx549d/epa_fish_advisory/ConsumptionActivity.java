@@ -3,6 +3,7 @@ package edu.umn.coxxx549d.epa_fish_advisory;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,6 +27,7 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.vision.text.Text;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -39,7 +42,7 @@ public class ConsumptionActivity extends AppCompatActivity
     CalendarView calendar;
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
 
-    private TextView[] eventItems = new TextView[] {};
+    private TextView[] eventItems = new TextView[3];
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -49,6 +52,10 @@ public class ConsumptionActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        eventItems[0] = (TextView) findViewById(R.id.textview1);
+        eventItems[1] = (TextView) findViewById(R.id.textview2);
+        eventItems[2] = (TextView) findViewById(R.id.textview3);
 
 
 
@@ -108,15 +115,21 @@ public class ConsumptionActivity extends AppCompatActivity
             }
         });*/
 
+        final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.v("Dialog List", "You clicked item " + which);
+            }
+        };
 
         Button calButton = (Button) findViewById(R.id.addentry);
         calButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                builder.setTitle("Add Event");
-                //builder.set
-                AlertDialog dialog = builder.create();
-                dialog.show();
+//                builder.setTitle("Add Event");
+//                builder.setItems(eventItems, dialogClickListener);
+//                AlertDialog dialog = builder.create();
+//                dialog.show();
             }
         });
     }

@@ -34,6 +34,22 @@
                 android:text="@string/calendar"
                 android:layout_centerHorizontal="true">
             </Button>
+
+            <TextView android:text="@string/fish_type"
+                android:id="@+id/textview1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"/>
+            <TextView android:text="@string/fish_size"
+                android:id="@+id/textview2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"/>
+            <TextView android:text="@string/lake_name"
+                android:id="@+id/textview3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"/>
         </RelativeLayout>
 
     </LinearLayout>
