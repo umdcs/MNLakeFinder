@@ -4,10 +4,12 @@ package edu.umn.coxxx549d.epa_fish_advisory;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
@@ -107,14 +109,6 @@ public class ConsumptionActivity extends AppCompatActivity
 
         caldroidFragment.setCaldroidListener(listener);
 
-        /*calendar = (CalendarView) findViewById(R.id.calendar);
-        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                Toast.makeText(getApplicationContext(), month + "/" + dayOfMonth + "/" + year, Toast.LENGTH_SHORT );
-            }
-        });*/
-
         final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -132,6 +126,8 @@ public class ConsumptionActivity extends AppCompatActivity
 //                dialog.show();
             }
         });
+
+
     }
 
 
@@ -174,18 +170,19 @@ public class ConsumptionActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
+        if (id == R.id.nav_main) {//camera->main
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        }
+        else if (id == R.id.nav_maps) {//slideshow->consumption
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
+        } else if (id == R.id.nav_advisory) {//gallery->advisory
+            Intent intent = new Intent(this, AdvisoryActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_manage) {
-
         } else if (id == R.id.nav_share) {
-
         } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

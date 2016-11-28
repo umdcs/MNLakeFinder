@@ -31,6 +31,7 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_input_add"
         app:backgroundTint="@color/caldroid_holo_blue_light"
-        android:tint="@color/caldroid_white"/>
+        android:tint="@color/caldroid_white"
+        android:onClick="onClick" />
 
 </android.support.design.widget.CoordinatorLayout>
