@@ -59,4 +59,15 @@
         android:layout_alignParentEnd="true"
         android:onClick="track"/>
 
+    <Button
+        android:text="See on Map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/trackButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/fcaButton"
+        android:visibility="invisible"
+        android:onClick="goToMaps"/>
+
 </RelativeLayout>

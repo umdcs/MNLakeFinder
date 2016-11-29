@@ -27,6 +27,7 @@ import static android.icu.lang.UCharacter.toUpperCase;
 
 public class AdvisoryActivity extends AppCompatActivity {
 
+    public final static String EXTRA_NAME = "edu.umn.coxxx549d.epa_fish_advisory.NAME";
     EditText lakeSearch;
     TextView info;
     TextView lake;
@@ -61,6 +62,13 @@ public class AdvisoryActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void goToMaps(View view) {
+        Intent intent = new Intent(this, MapsActivity.class);
+        String lakeName = lakeSearch.getText().toString();
+        intent.putExtra(EXTRA_NAME, lakeName);
+
+        startActivity(intent);
+    }
     class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
 
         private Exception exception;
@@ -139,6 +147,9 @@ public class AdvisoryActivity extends AppCompatActivity {
                                     }
                                 });
                         alertDialog.show();
+
+                        Button fcaButton = (Button) findViewById(R.id.fcaButton);
+                        fcaButton.setVisibility(View.VISIBLE);
                     }
                 }
 
