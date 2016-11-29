@@ -63,11 +63,22 @@
         android:text="See on Map"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/trackButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:id="@+id/mapButton"
+        android:visibility="visible"
+        android:onClick="goToMaps"
+        android:layout_alignTop="@+id/fcaButton" />
+
+    <Button
+        android:text="View FCA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:id="@+id/fcaButton"
         android:visibility="invisible"
-        android:onClick="goToMaps"/>
+        android:onClick="viewWeb" />
+
 
 </RelativeLayout>
