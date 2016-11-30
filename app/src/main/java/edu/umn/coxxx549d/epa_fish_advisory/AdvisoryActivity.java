@@ -27,6 +27,8 @@ import static android.icu.lang.UCharacter.toUpperCase;
 
 public class AdvisoryActivity extends AppCompatActivity {
 
+    public final static String EXTRA_NAME = "edu.umn.coxxx549d.epa_fish_advisory.NAME";
+    public static String EXTRA_ID = "0";
     EditText lakeSearch;
     TextView info;
     TextView lake;
@@ -61,6 +63,19 @@ public class AdvisoryActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void goToMaps(View view) {
+        Intent intent = new Intent(this, MapsActivity.class);
+        String lakeName = lakeSearch.getText().toString();
+        intent.putExtra(EXTRA_NAME, lakeName);
+
+        startActivity(intent);
+    }
+
+    public void viewWeb(View view) {
+        Intent intent = new Intent(this, WebActivity.class);
+
+        startActivity(intent);
+    }
     class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
 
         private Exception exception;
@@ -83,6 +98,7 @@ public class AdvisoryActivity extends AppCompatActivity {
                 Log.i("URL", url.toString());
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 try {
+                    Log.i("URL", url.toString());
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                     StringBuilder stringBuilder = new StringBuilder();
                     String line;
@@ -127,6 +143,8 @@ public class AdvisoryActivity extends AppCompatActivity {
 
                     JSONObject resources = c.getJSONObject("resources");
                     String fca = resources.getString("fca");
+                    String id = c.getString("id");
+                    Log.i("id", id);
                     Log.i("fca", fca);
                     if(fca == "1") {
                         AlertDialog alertDialog = new AlertDialog.Builder(AdvisoryActivity.this).create();
@@ -139,6 +157,10 @@ public class AdvisoryActivity extends AppCompatActivity {
                                     }
                                 });
                         alertDialog.show();
+
+                        Button fcaButton = (Button) findViewById(R.id.fcaButton);
+                        fcaButton.setVisibility(View.VISIBLE);
+                        EXTRA_ID = id;
                     }
                 }
 

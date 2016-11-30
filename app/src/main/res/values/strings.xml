@@ -15,4 +15,5 @@
     <string name="fish_type">Fish Type</string>
     <string name="lake_name">Lake Name</string>
     <string name="fish_size">Fish Size</string>
+    <string name="title_activity_web">WebActivity</string>
 </resources>
