@@ -16,4 +16,5 @@
     <string name="lake_name">Lake Name</string>
     <string name="fish_size">Fish Size</string>
     <string name="title_activity_web">WebActivity</string>
+    <string name="consumption_hint">To track your previously consumed fish simply click on the \n date you ate said fish followed by the blue add button.</string>
 </resources>

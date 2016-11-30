@@ -153,15 +153,12 @@ public class ConsumptionActivity extends AppCompatActivity
     }
 
     public void sendToCalendar(View view) {
-
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
                 .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, eventDate)
                 .putExtra(CalendarContract.Events.TITLE, "First Fish")
                 .putExtra(CalendarContract.Events.DESCRIPTION, fishType)
-                .putExtra(CalendarContract.Events.EVENT_LOCATION, lakeName)
-                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
-
+                .putExtra(CalendarContract.Events.EVENT_LOCATION, lakeName);
         startActivity(intent);
     }
 
