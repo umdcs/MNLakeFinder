@@ -28,6 +28,8 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -133,29 +135,38 @@ public class ConsumptionActivity extends AppCompatActivity
 
 
     public void addEvent(View view) {
+        GridLayout layout = new GridLayout(this);
+        layout.setOrientation(GridLayout.VERTICAL);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("New Calendar Event");
 
         java.util.Calendar beginTime = java.util.Calendar.getInstance();
-
         beginTime.set(2016, 0, 19, 7, 30);
         java.util.Calendar endTime = java.util.Calendar.getInstance();
         endTime.set(2016, 0, 19, 8, 30);
 
         // Set up the input
         final EditText input = new EditText(this);
+        input.setHint("Enter Type of Fish");
         final EditText input2 = new EditText(this);
+        input2.setHint("Enter The Lake Name");
         final EditText input3 = new EditText(this);
+        input3.setHint("Enter Fish Size (lbs)");
         final EditText input4 = new EditText(this);
+        input4.setHint("Enter Date (mm/dd/yyyy)");
+        layout.addView(input);
+        layout.addView(input2);
+        layout.addView(input3);
+        layout.addView(input4);
+
+
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        input2.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        input3.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        input4.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        builder.setView(input);
-        builder.setView(input2);
-        builder.setView(input3);
-        builder.setView(input4);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input2.setInputType(InputType.TYPE_CLASS_TEXT);
+        input3.setInputType(InputType.TYPE_CLASS_TEXT);
+        input4.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(layout);
         builder.show();
 
         Intent intent = new Intent(Intent.ACTION_INSERT)
