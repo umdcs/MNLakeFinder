@@ -47,8 +47,7 @@ public class ConsumptionActivity extends AppCompatActivity
 
     CalendarView calendar;
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
-
-    private TextView[] eventItems = new TextView[3];
+    String fishType, lakeName, fishSize, date;
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -57,13 +56,6 @@ public class ConsumptionActivity extends AppCompatActivity
         setContentView(R.layout.activity_consumption);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        eventItems[0] = (TextView) findViewById(R.id.textview1);
-        eventItems[1] = (TextView) findViewById(R.id.textview2);
-        eventItems[2] = (TextView) findViewById(R.id.textview3);
-
-
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -94,20 +86,17 @@ public class ConsumptionActivity extends AppCompatActivity
         t.commit();
 
         final CaldroidListener listener = new CaldroidListener() {
-
             @Override
             public void onSelectDate(Date date, View view) {
                 Toast.makeText(getApplicationContext(), formatter.format(date),
                         Toast.LENGTH_SHORT).show();
             }
-
             @Override
             public void onLongClickDate(Date date, View view) {
                 Toast.makeText(getApplicationContext(),
                         "Long click " + formatter.format(date),
                         Toast.LENGTH_SHORT).show();
             }
-
         };
 
         caldroidFragment.setCaldroidListener(listener);
@@ -118,36 +107,16 @@ public class ConsumptionActivity extends AppCompatActivity
                 Log.v("Dialog List", "You clicked item " + which);
             }
         };
-
-        Button calButton = (Button) findViewById(R.id.addentry);
-        calButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                builder.setTitle("Add Event");
-//                builder.setItems(eventItems, dialogClickListener);
-//                AlertDialog dialog = builder.create();
-//                dialog.show();
-            }
-        });
-
-
     }
 
 
     public void addEvent(View view) {
         GridLayout layout = new GridLayout(this);
         layout.setOrientation(GridLayout.VERTICAL);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("New Calendar Event");
         Button send = new Button(this);
         send.setHint("Send To Calendar");
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendToCalendar(view);
-            }
-        });
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("New Calendar Event");
 
         // Set up the input
         final EditText input = new EditText(this);
@@ -164,6 +133,16 @@ public class ConsumptionActivity extends AppCompatActivity
         layout.addView(input4);
         layout.addView(send);
 
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fishType = input.getText().toString();
+                lakeName = input2.getText().toString();
+                fishSize = input3.getText().toString();
+                date = input4.getText().toString();
+                sendToCalendar(view);
+            }
+        });
 
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -182,13 +161,11 @@ public class ConsumptionActivity extends AppCompatActivity
 
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
-                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
-                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
+                .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, date)
                 .putExtra(CalendarContract.Events.TITLE, "First Fish")
-                .putExtra(CalendarContract.Events.DESCRIPTION, "Large Mouth Bass")
-                .putExtra(CalendarContract.Events.EVENT_LOCATION, "Lake Minnewaska")
-                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY)
-                .putExtra(Intent.EXTRA_EMAIL, "rowan@example.com,trevor@example.com");
+                .putExtra(CalendarContract.Events.DESCRIPTION, fishType)
+                .putExtra(CalendarContract.Events.EVENT_LOCATION, lakeName)
+                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
 
         startActivity(intent);
     }
