@@ -137,14 +137,17 @@ public class ConsumptionActivity extends AppCompatActivity
     public void addEvent(View view) {
         GridLayout layout = new GridLayout(this);
         layout.setOrientation(GridLayout.VERTICAL);
+        Button send = new Button(this);
+        send.setHint("Send To Calendar");
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendToCalendar(view);
+            }
+        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("New Calendar Event");
-
-        java.util.Calendar beginTime = java.util.Calendar.getInstance();
-        beginTime.set(2016, 0, 19, 7, 30);
-        java.util.Calendar endTime = java.util.Calendar.getInstance();
-        endTime.set(2016, 0, 19, 8, 30);
 
         // Set up the input
         final EditText input = new EditText(this);
@@ -159,6 +162,7 @@ public class ConsumptionActivity extends AppCompatActivity
         layout.addView(input2);
         layout.addView(input3);
         layout.addView(input4);
+        layout.addView(send);
 
 
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
@@ -168,6 +172,13 @@ public class ConsumptionActivity extends AppCompatActivity
         input4.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(layout);
         builder.show();
+    }
+
+    public void sendToCalendar(View view) {
+        java.util.Calendar beginTime = java.util.Calendar.getInstance();
+        beginTime.set(2016, 0, 19, 7, 30);
+        java.util.Calendar endTime = java.util.Calendar.getInstance();
+        endTime.set(2016, 0, 19, 8, 30);
 
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
@@ -181,7 +192,6 @@ public class ConsumptionActivity extends AppCompatActivity
 
         startActivity(intent);
     }
-
 
     @Override
     public void onBackPressed() {
