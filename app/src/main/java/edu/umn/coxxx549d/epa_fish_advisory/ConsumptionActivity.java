@@ -47,7 +47,8 @@ public class ConsumptionActivity extends AppCompatActivity
 
     CalendarView calendar;
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
-    String fishType, lakeName, fishSize, date;
+    String fishType, lakeName, fishSize;
+    Date eventDate;
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -85,17 +86,21 @@ public class ConsumptionActivity extends AppCompatActivity
         t.replace(R.id.calendar, caldroidFragment);
         t.commit();
 
+        // Allows user to select the date of their consumption event on calendar instead of entering
+        // date manually.
         final CaldroidListener listener = new CaldroidListener() {
             @Override
             public void onSelectDate(Date date, View view) {
                 Toast.makeText(getApplicationContext(), formatter.format(date),
                         Toast.LENGTH_SHORT).show();
+                eventDate = date;
             }
             @Override
             public void onLongClickDate(Date date, View view) {
                 Toast.makeText(getApplicationContext(),
                         "Long click " + formatter.format(date),
                         Toast.LENGTH_SHORT).show();
+                eventDate = date;
             }
         };
 
@@ -119,25 +124,26 @@ public class ConsumptionActivity extends AppCompatActivity
         final EditText input3 = new EditText(this);
         input3.setHint("Enter Fish Size (lbs)");
         final EditText input4 = new EditText(this);
-        input4.setHint("Enter Date (mm/dd/yyyy)");
+        input4.setText(eventDate.toString());
+        //input4.setHint("Enter Date (mm/dd/yyyy)");
         layout.addView(input);
         layout.addView(input2);
         layout.addView(input3);
         layout.addView(input4);
         layout.addView(send);
 
+        //Send Button saves the inputs and uses them on the calendar intent
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fishType = input.getText().toString();
                 lakeName = input2.getText().toString();
                 fishSize = input3.getText().toString();
-                date = input4.getText().toString();
                 sendToCalendar(view);
             }
         });
 
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        // Specify the type of input expected
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input2.setInputType(InputType.TYPE_CLASS_TEXT);
         input3.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -147,14 +153,10 @@ public class ConsumptionActivity extends AppCompatActivity
     }
 
     public void sendToCalendar(View view) {
-        java.util.Calendar beginTime = java.util.Calendar.getInstance();
-        beginTime.set(2016, 0, 19, 7, 30);
-        java.util.Calendar endTime = java.util.Calendar.getInstance();
-        endTime.set(2016, 0, 19, 8, 30);
 
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
-                .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, date)
+                .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, eventDate)
                 .putExtra(CalendarContract.Events.TITLE, "First Fish")
                 .putExtra(CalendarContract.Events.DESCRIPTION, fishType)
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, lakeName)
