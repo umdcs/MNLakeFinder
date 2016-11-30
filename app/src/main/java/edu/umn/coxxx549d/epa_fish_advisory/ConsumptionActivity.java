@@ -100,13 +100,6 @@ public class ConsumptionActivity extends AppCompatActivity
         };
 
         caldroidFragment.setCaldroidListener(listener);
-
-        final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Log.v("Dialog List", "You clicked item " + which);
-            }
-        };
     }
 
 
