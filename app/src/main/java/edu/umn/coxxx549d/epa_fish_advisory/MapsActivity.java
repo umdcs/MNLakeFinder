@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -46,11 +47,20 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 import com.google.android.gms.maps.model.UrlTileProvider;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import static edu.umn.coxxx549d.epa_fish_advisory.R.id.url;
 
 
 public class MapsActivity extends AppCompatActivity
@@ -63,6 +73,8 @@ public class MapsActivity extends AppCompatActivity
     LocationRequest mLocationRequest;
     Location mCurrentLocation;
     String mLastUpdateTime;
+    static final String API_URL = "HTTP://services.dnr.state.mn.us/api/lakefinder/by_name/v1?name=";
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,22 +121,25 @@ public class MapsActivity extends AppCompatActivity
 
         MenuItem searchItem = menu.findItem(R.id.search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //collapse the search
-                AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
-                alertDialog.setTitle("Alert");
-                alertDialog.setMessage("Query has been submit: " + query);
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                alertDialog.show();
+//                AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
+//                alertDialog.setTitle("Alert");
+//                alertDialog.setMessage("Query has been submit: " + query);
+//                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener(){
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//                alertDialog.show();
+
+                new RetrieveLakeTask().execute();
+
                 return false;
             }
 
@@ -400,4 +415,84 @@ public class MapsActivity extends AppCompatActivity
     }
 
 
+    class RetrieveLakeTask extends AsyncTask<Void, Void, String> {
+        private Exception exception;
+        String lakeName = searchView.getQuery().toString();
+
+
+        protected void onPreExecute() {
+            //do stuff
+        }
+
+        protected String doInBackground(Void... urls) {
+
+            try{
+                URL url = new URL(API_URL + lakeName);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                try{
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while((line = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(line).append("\n");
+                    }
+                    bufferedReader.close();
+                    return stringBuilder.toString();
+                }
+                finally {
+                    urlConnection.disconnect();
+                }
+            }
+            catch(Exception e) {
+                Log.e("ERROR", e.getMessage(), e);
+                return null;
+            }
+        }
+
+        protected void onPostExecute(String response) {
+            if(response == null) {
+                response = "There was an error";
+            }
+
+            try{
+                JSONObject jsonObj = new JSONObject(response);
+                JSONArray results = jsonObj.getJSONArray("results");
+
+                for(int i = 0; i < results.length(); ++i) {
+                    JSONObject c = results.getJSONObject(i);
+
+                    JSONObject point = c.getJSONObject("point");
+
+                    //gets coordinates for lake
+                    String coord = point.getString("epsg:4326");
+
+                    //splits the two coordinate strings
+                    String array[] = coord.split(",");
+
+                    //parse strings to doubles
+                    Log.d("tempLat ", array[0]);
+                    Log.d("tempLon ", array[1]);
+
+                    String Lat = array[0];
+                    String Lon = array[1];
+                    String tempLat = Lat.replace('[', ' ');
+                    String tempLon = Lon.replace(']', ' ');
+                    Log.d("TEMPLAT ", tempLat);
+                    Log.d("TEMPLON ", tempLon);
+                    Double lakeLat = Double.parseDouble(tempLat);
+                    Double lakeLon = Double.parseDouble(tempLon);
+                    LatLng lakeLatLng = new LatLng(lakeLat, lakeLon);
+                    Log.d("lakeLat ", lakeLat.toString());
+                    Log.d("lakeLat ", lakeLon.toString());
+
+                    //move camera to new position
+                    nMap.moveCamera(CameraUpdateFactory.newLatLng(lakeLatLng));
+                    nMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+                }
+            }
+            catch(JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
