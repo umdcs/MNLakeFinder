@@ -418,6 +418,7 @@ public class MapsActivity extends AppCompatActivity
     class RetrieveLakeTask extends AsyncTask<Void, Void, String> {
         private Exception exception;
         String lakeName = searchView.getQuery().toString();
+        LatLng lakeLatLng;
 
 
         protected void onPreExecute() {
@@ -458,8 +459,7 @@ public class MapsActivity extends AppCompatActivity
                 JSONObject jsonObj = new JSONObject(response);
                 JSONArray results = jsonObj.getJSONArray("results");
 
-                for(int i = 0; i < results.length(); ++i) {
-                    JSONObject c = results.getJSONObject(i);
+                    JSONObject c = results.getJSONObject(1);
 
                     JSONObject point = c.getJSONObject("point");
 
@@ -470,25 +470,23 @@ public class MapsActivity extends AppCompatActivity
                     String array[] = coord.split(",");
 
                     //parse strings to doubles
-                    Log.d("tempLat ", array[0]);
-                    Log.d("tempLon ", array[1]);
-
                     String Lat = array[0];
                     String Lon = array[1];
                     String tempLat = Lat.replace('[', ' ');
                     String tempLon = Lon.replace(']', ' ');
-                    Log.d("TEMPLAT ", tempLat);
-                    Log.d("TEMPLON ", tempLon);
-                    Double lakeLat = Double.parseDouble(tempLat);
-                    Double lakeLon = Double.parseDouble(tempLon);
-                    LatLng lakeLatLng = new LatLng(lakeLat, lakeLon);
-                    Log.d("lakeLat ", lakeLat.toString());
-                    Log.d("lakeLat ", lakeLon.toString());
 
-                    //move camera to new position
-                    nMap.moveCamera(CameraUpdateFactory.newLatLng(lakeLatLng));
-                    nMap.animateCamera(CameraUpdateFactory.zoomTo(14));
-                }
+
+                    //coordinates were reversed. Trust me, this works.
+                    Double lakeLon = Double.parseDouble(tempLat);
+                    Double lakeLat = Double.parseDouble(tempLon);
+                    lakeLatLng = new LatLng(lakeLat, lakeLon);
+
+                //Update camera to searched lake
+                nMap.moveCamera(CameraUpdateFactory.newLatLng(lakeLatLng));
+                nMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+                //Drop a marker on searched lake
+                nMap.addMarker(new MarkerOptions().position(new LatLng(lakeLat, lakeLon))
+                        .title("current lake").snippet("insert stuff here"));
             }
             catch(JSONException e) {
                 e.printStackTrace();
