@@ -2,8 +2,6 @@ package edu.umn.coxxx549d.epa_fish_advisory;
 
 
 import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
@@ -11,11 +9,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,25 +25,17 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.GridLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.vision.text.Text;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
-
-
-import java.lang.reflect.Array;
 import java.util.Date;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class ConsumptionActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    CalendarView calendar;
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
-    String fishType, lakeName, fishSize;
+    String fishType, lakeName, fishSize, eventName;
     Date eventDate;
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -62,7 +50,9 @@ public class ConsumptionActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addEvent(view);
+                if(eventDate != null) {
+                    addEvent(view);
+                }
             }
         });
 
@@ -125,7 +115,10 @@ public class ConsumptionActivity extends AppCompatActivity
         input3.setHint("Enter Fish Size (lbs)");
         final EditText input4 = new EditText(this);
         input4.setText(eventDate.toString());
+        final EditText input5 = new EditText(this);
+        input5.setHint("Name Your Consumption Event");
         //input4.setHint("Enter Date (mm/dd/yyyy)");
+        layout.addView(input5);
         layout.addView(input);
         layout.addView(input2);
         layout.addView(input3);
@@ -139,6 +132,7 @@ public class ConsumptionActivity extends AppCompatActivity
                 fishType = input.getText().toString();
                 lakeName = input2.getText().toString();
                 fishSize = input3.getText().toString();
+                eventName = input5.getText().toString();
                 sendToCalendar(view);
             }
         });
@@ -148,6 +142,8 @@ public class ConsumptionActivity extends AppCompatActivity
         input2.setInputType(InputType.TYPE_CLASS_TEXT);
         input3.setInputType(InputType.TYPE_CLASS_TEXT);
         input4.setInputType(InputType.TYPE_CLASS_TEXT);
+        input5.setInputType(InputType.TYPE_CLASS_TEXT);
+
         builder.setView(layout);
         builder.show();
     }
