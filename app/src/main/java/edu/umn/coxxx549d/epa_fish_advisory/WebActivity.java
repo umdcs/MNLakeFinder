@@ -22,19 +22,31 @@ public class WebActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String id = intent.getStringExtra(AdvisoryActivity.EXTRA_ID);
 
-        wv1=(WebView)findViewById(R.id.webView);
+        wv1 = (WebView) findViewById(R.id.webView);
 
         String url = "https://maps1.dnr.state.mn.us/lakefinder/mobile/#content/" + id + "/summary";
 
-        wv1.getSettings().setLoadsImagesAutomatically(true);
-        wv1.getSettings().setJavaScriptEnabled(true);
+       /* wv1.getSettings().setLoadsImagesAutomatically(true);
         wv1.getSettings().setAllowContentAccess(true);
         wv1.getSettings().setAllowFileAccess(true);
         wv1.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         wv1.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        wv1.getSettings().setLoadWithOverviewMode(true);
+        wv1.setWebViewClient(new MyWebViewClient());
+        wv1.getSettings().setDomStorageEnabled(true);
+*/
+
+        wv1.getSettings().setJavaScriptEnabled(true);
         wv1.loadUrl(url);
     }
 
+    private class MyWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+    }
     public void back(View view) {
         Intent intent = new Intent(this, AdvisoryActivity.class);
         startActivity(intent);
