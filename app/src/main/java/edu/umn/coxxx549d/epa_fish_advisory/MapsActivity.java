@@ -1,5 +1,7 @@
 package edu.umn.coxxx549d.epa_fish_advisory;
 
+import android.*;
+import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -72,7 +74,7 @@ public class MapsActivity extends AppCompatActivity
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
     Location mCurrentLocation;
-    String mLastUpdateTime;
+    String mLastUpdateTime, name;
     static final String API_URL = "HTTP://services.dnr.state.mn.us/api/lakefinder/by_name/v1?name=";
     SearchView searchView;
 
@@ -101,6 +103,9 @@ public class MapsActivity extends AppCompatActivity
         mLocationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(30 * 1000).setFastestInterval(5 * 1000);
 
+        //TODO: Get string extra
+        Intent intent = getIntent();
+        name = intent.getStringExtra("EXTRA_NAME");
     }
 
     @Override
@@ -236,12 +241,39 @@ public class MapsActivity extends AppCompatActivity
         tileOverlay.setTransparency(0.3f);
         tileOverlay.setFadeIn(true);
 
+        //TODO: Move current location button that is covered by the toolbar
+        //Set the onClickListener for new button like
+        //setOnClickListener() {
+        //  lat = location.getLatitude();
+        //  long = location.getLongitude();
+        //  nMap.moveCamera(new LatLng(lat, long));
+        //});
+
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
                 //show explanation asynchronously
+                AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
+                alertDialog.setTitle("Alert");
+                alertDialog.setMessage("This app needs your location to provide a better experience.");
+                
+                //Send user a permission dialog if not cancelled
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Turn on location", new DialogInterface.OnClickListener(){
+                   public void onClick(DialogInterface dialog, int which) {
+                       ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+                       dialog.dismiss();
+                   }
+                });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener(){
+                   public void onClick(DialogInterface dialog, int which) {
+                       dialog.dismiss();
+                   }
+                });
+                alertDialog.show();
+
+                //TODO: Restructure code to get into the else below if we get into this if
             } else {
                 //no explanation needed, we can request the permission
                 //LOCATION_PERMISSION_REQUEST_CODE is passed
@@ -263,7 +295,8 @@ public class MapsActivity extends AppCompatActivity
 
             //satellite view works better with the lake depth overlay
             nMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-
+            //Disable default location button that is covered by toolbar
+            nMap.getUiSettings().setMyLocationButtonEnabled(false);
             //get current location
             double latitude = myLocation.getLatitude();
             double longitude = myLocation.getLongitude();
@@ -279,6 +312,7 @@ public class MapsActivity extends AppCompatActivity
             //drop marker on current location
             nMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
                     .title("You're here.").snippet("You're located."));
+
 
         }
     }
@@ -480,13 +514,18 @@ public class MapsActivity extends AppCompatActivity
                     Double lakeLon = Double.parseDouble(tempLat);
                     Double lakeLat = Double.parseDouble(tempLon);
                     lakeLatLng = new LatLng(lakeLat, lakeLon);
+                Log.d("lakeLat", lakeLat.toString());
+                Log.d("lakeLon", lakeLon.toString());
 
                 //Update camera to searched lake
                 nMap.moveCamera(CameraUpdateFactory.newLatLng(lakeLatLng));
                 nMap.animateCamera(CameraUpdateFactory.zoomTo(14));
-                //Drop a marker on searched lake
+                //Remove previous markers and drop a marker on searched lake
+                //nMap.clear();
                 nMap.addMarker(new MarkerOptions().position(new LatLng(lakeLat, lakeLon))
                         .title("current lake").snippet("insert stuff here"));
+                //TODO: SET onMapLongClickListener to drop marker on specified location
+                //TODO: SET onMapCLickListener
             }
             catch(JSONException e) {
                 e.printStackTrace();
