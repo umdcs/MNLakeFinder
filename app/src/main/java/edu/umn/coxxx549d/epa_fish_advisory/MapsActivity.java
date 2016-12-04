@@ -241,6 +241,18 @@ public class MapsActivity extends AppCompatActivity
         tileOverlay.setTransparency(0.3f);
         tileOverlay.setFadeIn(true);
 
+        nMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                double clickLat = 0.0;
+                double clickLong = 0.0;
+
+                MarkerOptions marker = new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude))
+                        .title("Test");
+                nMap.addMarker(marker);
+            }
+        });
+
         //TODO: Move current location button that is covered by the toolbar
         //Set the onClickListener for new button like
         //setOnClickListener() {
@@ -258,7 +270,7 @@ public class MapsActivity extends AppCompatActivity
                 AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
                 alertDialog.setTitle("Alert");
                 alertDialog.setMessage("This app needs your location to provide a better experience.");
-                
+
                 //Send user a permission dialog if not cancelled
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Turn on location", new DialogInterface.OnClickListener(){
                    public void onClick(DialogInterface dialog, int which) {
@@ -524,8 +536,8 @@ public class MapsActivity extends AppCompatActivity
                 //nMap.clear();
                 nMap.addMarker(new MarkerOptions().position(new LatLng(lakeLat, lakeLon))
                         .title("current lake").snippet("insert stuff here"));
-                //TODO: SET onMapLongClickListener to drop marker on specified location
-                //TODO: SET onMapCLickListener
+                lakeName = null;
+
             }
             catch(JSONException e) {
                 e.printStackTrace();
