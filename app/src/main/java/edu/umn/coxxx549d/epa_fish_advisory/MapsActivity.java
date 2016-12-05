@@ -218,6 +218,8 @@ public class MapsActivity extends AppCompatActivity
         nMap = googleMap;
         Location myLocation = null;
 
+
+
         //animate camera to geographical center of minnesota
         LatLng center = new LatLng(46.348723, -94.197646);
         nMap.moveCamera(CameraUpdateFactory.newLatLng(center));
@@ -227,6 +229,7 @@ public class MapsActivity extends AppCompatActivity
         nMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
         //Set padding
+        //nMap.setPadding(100, 0, 0, 0);
 
         TileProvider tileProvider = new UrlTileProvider(256, 256) {
             @Override
@@ -255,7 +258,7 @@ public class MapsActivity extends AppCompatActivity
             }
         };
 
-
+        //Add lake depth overlay
         TileOverlay tileOverlay = nMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
         tileOverlay.setTransparency(0.3f);
         tileOverlay.setFadeIn(true);
@@ -317,7 +320,7 @@ public class MapsActivity extends AppCompatActivity
             }
 
             //Disable default location button that is covered by toolbar
-            nMap.getUiSettings().setMyLocationButtonEnabled(false);
+            //nMap.getUiSettings().setMyLocationButtonEnabled(false);
 
             //get current location
             double latitude = myLocation.getLatitude();
