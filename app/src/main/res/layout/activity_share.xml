@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical"
+android:paddingLeft="16dp"
+android:paddingRight="16dp"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+<EditText android:id="@+id/fish"
+    android:layout_weight="0.03"
+    android:layout_width="match_parent"
+    android:hint="Fish"
+    android:layout_height="20dp" />
+<EditText android:id="@+id/weight"
+    android:layout_weight="0.03"
+    android:layout_width="match_parent"
+    android:layout_height="20dp"
+    android:hint="Weight" />
+
+<EditText android:id="@+id/length"
+    android:layout_weight="0.03"
+    android:layout_width="match_parent"
+    android:layout_height="20dp"
+    android:hint="Length" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/lake"
+        android:layout_weight="0.03"
+        android:hint="Lake" />
+
+    <Button
+        android:text="Share Fish"
+        android:layout_width="wrap_content"
+        android:id="@+id/shareButton"
+        android:layout_weight="0.03"
+        android:layout_height="10dp"
+        android:onClick="restPOST"/>
+
+
+
+    <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/textView"
+    android:layout_weight="0.17"
+        android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+</LinearLayout>
