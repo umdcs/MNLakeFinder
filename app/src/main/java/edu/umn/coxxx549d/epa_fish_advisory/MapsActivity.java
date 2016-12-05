@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -74,7 +75,7 @@ public class MapsActivity extends AppCompatActivity
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
     Location mCurrentLocation;
-    String mLastUpdateTime, name;
+    String mLastUpdateTime, adviseName;
     static final String API_URL = "HTTP://services.dnr.state.mn.us/api/lakefinder/by_name/v1?name=";
     SearchView searchView;
 
@@ -103,9 +104,13 @@ public class MapsActivity extends AppCompatActivity
         mLocationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(30 * 1000).setFastestInterval(5 * 1000);
 
-        //TODO: Get string extra
+        //Get the potential string extra for a lake name
+        //and start a new lake search if there is a string extra
         Intent intent = getIntent();
-        name = intent.getStringExtra("EXTRA_NAME");
+        adviseName = intent.getStringExtra("EXTRA_NAME");
+        if(adviseName != null) {
+            new RetrieveLakeTask();
+        }
     }
 
     @Override
@@ -209,6 +214,16 @@ public class MapsActivity extends AppCompatActivity
         nMap = googleMap;
         Location myLocation = null;
 
+        //animate camera to geographical center of minnesota
+        LatLng center = new LatLng(46.348723, -94.197646);
+        nMap.moveCamera(CameraUpdateFactory.newLatLng(center));
+        nMap.animateCamera(CameraUpdateFactory.zoomTo(8));
+
+        //satellite view works better with the lake depth overlay
+        nMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
+        //TODO: set padding for google map
+
         TileProvider tileProvider = new UrlTileProvider(256, 256) {
             @Override
             public URL getTileUrl(int x, int y, int zoom) {
@@ -244,6 +259,7 @@ public class MapsActivity extends AppCompatActivity
         nMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
+                //use for getting
                 double clickLat = 0.0;
                 double clickLong = 0.0;
 
@@ -252,15 +268,6 @@ public class MapsActivity extends AppCompatActivity
                 nMap.addMarker(marker);
             }
         });
-
-        //TODO: Move current location button that is covered by the toolbar
-        //Set the onClickListener for new button like
-        //setOnClickListener() {
-        //  lat = location.getLatitude();
-        //  long = location.getLongitude();
-        //  nMap.moveCamera(new LatLng(lat, long));
-        //});
-
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -305,10 +312,9 @@ public class MapsActivity extends AppCompatActivity
                 System.out.println("Caught Security Exception: " + e);
             }
 
-            //satellite view works better with the lake depth overlay
-            nMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
             //Disable default location button that is covered by toolbar
             nMap.getUiSettings().setMyLocationButtonEnabled(false);
+
             //get current location
             double latitude = myLocation.getLatitude();
             double longitude = myLocation.getLongitude();
@@ -350,7 +356,7 @@ public class MapsActivity extends AppCompatActivity
                     try {
                         nMap.setMyLocationEnabled(true);
                     } catch (SecurityException e) {
-                        Log.d("Caught ", "Security Exception " + e);
+                        throw new SecurityException(e);
                     }
                 } else {
 
@@ -358,10 +364,9 @@ public class MapsActivity extends AppCompatActivity
                     try {
                         nMap.setMyLocationEnabled(false);
                     } catch (SecurityException e) {
-                        Log.d("Caught ", "Security Exception " + e);
+                        throw new SecurityException(e);
                     }
                 }//end else
-                return;
             }
             //Other cases put here
         }//end switch
@@ -407,11 +412,6 @@ public class MapsActivity extends AppCompatActivity
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-        updateUI();
-    }
-
-    public void updateUI() {
-
     }
 
     /**
@@ -422,7 +422,7 @@ public class MapsActivity extends AppCompatActivity
      * @param x Flag to indicate a suspended connection
      */
     public void onConnectionSuspended(int x) {
-
+        //Do stuff
     }
 
     /**
@@ -460,15 +460,22 @@ public class MapsActivity extends AppCompatActivity
         }
     }
 
-
+    /**
+     * Performs lake search to animate
+     * camera over the specified lake
+     *
+     */
     class RetrieveLakeTask extends AsyncTask<Void, Void, String> {
-        private Exception exception;
+
         String lakeName = searchView.getQuery().toString();
         LatLng lakeLatLng;
 
-
         protected void onPreExecute() {
-            //do stuff
+            //reset lakeName to adviseName
+            //adviseName will be null if we aren't coming from advisory activity
+            if(adviseName != null) {
+                lakeName = adviseName;
+            }
         }
 
         protected String doInBackground(Void... urls) {
@@ -515,13 +522,13 @@ public class MapsActivity extends AppCompatActivity
                     //splits the two coordinate strings
                     String array[] = coord.split(",");
 
-                    //parse strings to doubles
+                    //replace extra characters left from JSON data
                     String Lat = array[0];
                     String Lon = array[1];
                     String tempLat = Lat.replace('[', ' ');
                     String tempLon = Lon.replace(']', ' ');
 
-
+                    //parse strings to doubles
                     //coordinates were reversed. Trust me, this works.
                     Double lakeLon = Double.parseDouble(tempLat);
                     Double lakeLat = Double.parseDouble(tempLon);
@@ -532,12 +539,9 @@ public class MapsActivity extends AppCompatActivity
                 //Update camera to searched lake
                 nMap.moveCamera(CameraUpdateFactory.newLatLng(lakeLatLng));
                 nMap.animateCamera(CameraUpdateFactory.zoomTo(14));
-                //Remove previous markers and drop a marker on searched lake
-                //nMap.clear();
-                nMap.addMarker(new MarkerOptions().position(new LatLng(lakeLat, lakeLon))
-                        .title("current lake").snippet("insert stuff here"));
-                lakeName = null;
 
+                nMap.addMarker(new MarkerOptions().position(new LatLng(lakeLat, lakeLon))
+                        .title("Current Lake").snippet(lakeName));
             }
             catch(JSONException e) {
                 e.printStackTrace();
