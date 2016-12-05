@@ -113,6 +113,10 @@ public class MapsActivity extends AppCompatActivity
         }
     }
 
+    //TODO: Provide a dialog box whenever the user searches for a lake asking if they want to go to advisory page
+    //TODO: Find a way to search the local area for a nearby lake OR go straight to advisory page and display the current lake
+
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -546,6 +550,24 @@ public class MapsActivity extends AppCompatActivity
             catch(JSONException e) {
                 e.printStackTrace();
             }
+            //Create dialog to allow user to choose to go to advisory activity
+            AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
+            alertDialog.setTitle("Lake Information");
+            alertDialog.setMessage("Would you like to see more information about this lake? By clicking yes, you will be brought to a new page.");
+
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(MapsActivity.this, AdvisoryActivity.class);
+                    startActivity(intent);
+                    dialog.dismiss();
+                }
+            });
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            alertDialog.show();
         }
     }
 }
