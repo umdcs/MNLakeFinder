@@ -113,8 +113,8 @@ public class MapsActivity extends AppCompatActivity
         }
     }
 
-    //TODO: Provide a dialog box whenever the user searches for a lake asking if they want to go to advisory page
-    //TODO: Find a way to search the local area for a nearby lake OR go straight to advisory page and display the current lake
+
+    //Find a way to search the local area for a nearby lake OR go straight to advisory page and display the current lake
 
 
     @Override
@@ -226,7 +226,7 @@ public class MapsActivity extends AppCompatActivity
         //satellite view works better with the lake depth overlay
         nMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
-        //TODO: set padding for google map
+        //Set padding
 
         TileProvider tileProvider = new UrlTileProvider(256, 256) {
             @Override
@@ -296,7 +296,7 @@ public class MapsActivity extends AppCompatActivity
                 });
                 alertDialog.show();
 
-                //TODO: Restructure code to get into the else below if we get into this if
+                //Restructure code to get into the else below if we get into this if
             } else {
                 //no explanation needed, we can request the permission
                 //LOCATION_PERMISSION_REQUEST_CODE is passed
