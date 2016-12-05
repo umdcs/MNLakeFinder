@@ -12,10 +12,16 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="calendar">Add Entry</string>
     <string name="action_settings">Settings</string>
+
     <string name="fish_type">Fish Type</string>
     <string name="lake_name">Lake Name</string>
     <string name="fish_size">Fish Size</string>
     <string name="title_activity_web">WebActivity</string>
     <string name="consumption_hint">To track your previously consumed fish simply click on the \n date you ate said fish followed by the blue add button.</string>
     <string name="title_activity_share">ShareActivity</string>
+
+    <string name="search_title">Search For Lake</string>
+    <string name="searchable_name">Test</string>
+    <string name="search_hint">Search Hint</string>
+
 </resources>
