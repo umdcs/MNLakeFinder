@@ -106,7 +106,7 @@ public class ShareActivity extends AppCompatActivity {
          * @param result the result from the query
          */
         protected void onPostExecute(String result) {
-            textView.setText(result);
+            textView.setText(result.replaceAll("\"", " ").substring(1, result.length()-1));
         }
     }
 
@@ -138,3 +138,4 @@ public class ShareActivity extends AppCompatActivity {
         new HTTPAsyncTask().execute("http://10.0.2.2:4322/userData", "POST", jsonParam.toString());
     }
 }
+//{"fish":"bass","length":"11","weight":"5","lake":"briggs"}

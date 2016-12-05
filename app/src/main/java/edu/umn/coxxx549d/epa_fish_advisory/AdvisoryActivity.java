@@ -30,10 +30,11 @@ import static android.icu.lang.UCharacter.toUpperCase;
 public class AdvisoryActivity extends AppCompatActivity {
 
     public final static String EXTRA_NAME = "edu.umn.coxxx549d.epa_fish_advisory.NAME";
-    public static String EXTRA_ID = "0";
+    public final static String EXTRA_ID = "edu.umn.coxxx549d.epa_fish_advisory.ID";
     EditText lakeSearch;
     TextView info;
     TextView lake;
+    String id;
     // API by name
     static final String API_URL = "HTTP://services.dnr.state.mn.us/api/lakefinder/by_name/v1?name=";
     //API by lat,long
@@ -75,6 +76,7 @@ public class AdvisoryActivity extends AppCompatActivity {
 
     public void viewWeb(View view) {
         Intent intent = new Intent(this, WebActivity.class);
+        intent.putExtra(EXTRA_ID, id);
 
         startActivity(intent);
     }
@@ -139,13 +141,15 @@ public class AdvisoryActivity extends AppCompatActivity {
                     JSONObject c = results.getJSONObject(i);
 
                     String fish = c.getString("fishSpecies");
+                    fish = fish.replaceAll("\""," ");
+                    fish = fish.substring(1, fish.length() - 1);
 
                     Log.i("fish", fish);
                     info.setText(fish);
 
                     JSONObject resources = c.getJSONObject("resources");
                     String fca = resources.getString("fca");
-                    String id = c.getString("id");
+                    id = c.getString("id");
                     Log.i("id", id);
                     Log.i("fca", fca);
                     if(fca == "1") {
@@ -162,7 +166,7 @@ public class AdvisoryActivity extends AppCompatActivity {
 
                         Button fcaButton = (Button) findViewById(R.id.fcaButton);
                         fcaButton.setVisibility(View.VISIBLE);
-                        EXTRA_ID = id;
+
                     }
                 }
 
@@ -175,3 +179,4 @@ public class AdvisoryActivity extends AppCompatActivity {
 
 
 //{"status":"OK","results":[{"resources":{"fca":1,"lakeSurvey":1,"specialFishingRegs":1,"waterQuality":1,"waterLevels":1,"lakeMap":1,"waterAccess":1,"fishStocking":1},"fishSpecies":["black crappie","bluegill","brown bullhead","hybrid sunfish","largemouth bass","northern pike","pumpkinseed","rock bass","smallmouth bass","sunfish","tullibee (cisco)","walleye","yellow bullhead","yellow perch","bowfin (dogfish)","white sucker","banded killifish","blackchin shiner","blacknose shiner","bluntnose minnow","brook stickleback","central mudminnow","common shiner","golden shiner","Iowa darter","Johnny darter","mimic shiner","mottled sculpin"],"specialFishingRegs":[{"regs":[{"text":"All from 24-36\" must be immediately released. One over 36\" allowed in possession.","species":["Northern Pike"]}],"location":"","locDisplayType":1}],"mapid":["B0025"],"name":"Beltrami","border":"","apr_ids":["1738"],"point":{"epsg:26915":[363550,5272840],"epsg:4326":[-94.815049,47.594603]},"bbox":{"epsg:26915":[361182,5271744,365918,5273936],"epsg:4326":[-94.846878,47.584245,-94.78323,47.604953]},"notes":"","nearest_town":"Bemidji","invasiveSpecies":[],"id":"04013500","county":"Beltrami","pca_id":"04-0135-00"}],"message":""}
+//["black bullhead","black crappie","bluegill","brown bullhead","crappie","green sunfish","hybrid sunfish","largemouth bass","northern pike","pumpkinseed","smallmouth bass","walleye","white crappie","yellow bullhead","yellow perch","bowfin (dogfish)","common carp","greater redhorse","redhorse","shorthead redhorse","silver redhorse","white sucker","bluntnose minnow","common shiner","creek chub","fathead minnow","golden shiner","Johnny darter","logperch","spottail shiner","trout-perch"]
