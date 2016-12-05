@@ -32,5 +32,12 @@
                 android:title="Send" />
         </menu>
     </item>
+    <item
+        android:id="@+id/search"
+        android:title="@string/search_title"
+        android:icon="@android:drawable/ic_menu_search"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:actionViewClass="android.widget.SearchView"
+        />
 
 </menu>
