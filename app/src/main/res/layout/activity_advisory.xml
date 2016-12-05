@@ -1,84 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_advisory"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="edu.umn.coxxx549d.epa_fish_advisory.AdvisoryActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/lake"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="54dp"
-        android:textSize="36sp"
-        android:textStyle="normal|bold" />
-
-    <EditText
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_advisory"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_alignParentTop="true"
-        android:id="@+id/lakeSearch"
-        android:inputType="textPersonName"
-        android:hint="Search Lake" />
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="edu.umn.coxxx549d.epa_fish_advisory.AdvisoryActivity">
 
-    <Button
-        android:text="Search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/searchButton"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lake"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="54dp"
+            android:textSize="36sp"
+            android:textStyle="normal|bold" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:id="@+id/info"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:layout_height="300dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="36dp" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_alignParentTop="true"
+            android:id="@+id/lakeSearch"
+            android:inputType="textPersonName"
+            android:hint="Search Lake" />
 
-    <Button
-        android:text="Track Fish"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/trackButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="track"/>
+        <Button
+            android:text="Search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchButton"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
-    <Button
-        android:text="See on Map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/mapButton"
-        android:visibility="visible"
-        android:onClick="goToMaps"
-        android:layout_alignTop="@+id/fcaButton" />
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/info"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_height="300dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="36dp" />
 
-    <Button
-        android:text="View FCA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/fcaButton"
-        android:visibility="invisible"
-        android:onClick="viewWeb" />
+        <Button
+            android:text="Track Fish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/trackButton"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:onClick="track"/>
+
+        <Button
+            android:text="See on Map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/mapButton"
+            android:visibility="visible"
+            android:onClick="goToMaps"
+            android:layout_alignTop="@+id/fcaButton" />
+
+        <Button
+            android:text="View FCA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/fcaButton"
+            android:visibility="invisible"
+            android:onClick="viewWeb" />
 
 
-</RelativeLayout>
+    </RelativeLayout>

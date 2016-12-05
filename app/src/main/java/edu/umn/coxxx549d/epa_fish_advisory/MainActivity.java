@@ -77,5 +77,9 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ConsumptionActivity.class);
             startActivity(intent);
         }
+        else if(button_text.equals("Share")) {
+            Intent intent = new Intent(this, ShareActivity.class);
+            startActivity(intent);
+        }
     }
 }
