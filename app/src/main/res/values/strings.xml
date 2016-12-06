@@ -1,5 +1,5 @@
 <resources xmlns:android="http://schemas.android.com/tools">
-    <string name="app_name">EPA_Fish_Advisory</string>
+    <string name="app_name">Fish Advisory</string>
     <string name="title_activity_maps">Map</string>
     <string name="Lake">lakeName</string>
     <string name="consumption_history">Consumption</string>

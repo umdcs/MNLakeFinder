@@ -8,15 +8,15 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/lakeimage"
+    android:background="@drawable/lake"
     android:orientation="vertical"
     tools:context="edu.umn.coxxx549d.epa_fish_advisory.MainActivity">
 
     <ImageView
-        android:id="@+id/epalogo"
+        android:id="@+id/umd"
         android:layout_width="100dp"
         android:layout_height="115dp"
-        android:src="@drawable/epalogo"
+        android:src="@drawable/umd"
         android:layout_x="400dp"
         android:layout_y="40dp"
         android:layout_alignParentTop="true"
@@ -33,7 +33,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="172dp"
-        android:layout_below="@id/epalogo"/>
+        android:layout_below="@id/umd"/>
 
     <Button
         android:id="@+id/advisoryButton"
