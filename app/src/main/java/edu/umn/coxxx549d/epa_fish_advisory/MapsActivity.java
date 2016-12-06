@@ -101,9 +101,11 @@ public class MapsActivity extends AppCompatActivity
         //Get the potential string extra for a lake name
         //and start a new lake search if there is a string extra
         Intent intent = getIntent();
-        adviseName = intent.getStringExtra(AdvisoryActivity.EXTRA_NAME);
+        String temp = intent.getStringExtra(AdvisoryActivity.EXTRA_NAME);
+        if(temp != null)
+            adviseName = temp;
 
-        if(!adviseName.equals("0")) {
+        if(adviseName != "0") {
             new RetrieveLakeTask().execute();
         }
     }
@@ -482,11 +484,15 @@ public class MapsActivity extends AppCompatActivity
         protected void onPreExecute() {
             //reset lakeName to adviseName
             //adviseName will be null if we aren't coming from advisory activity
-            if(adviseName != null) {
+            if(adviseName != "0") {
+                Log.d("DEBUG"," adviseName=" + adviseName);
+                Log.d("DEBUG"," inside IF");
                 lakeName = adviseName;
             } else {
+                Log.d("DEBUG"," inside ELSE");
                 lakeName = searchView.getQuery().toString();
             }
+            Log.d("DEBUG","lakeName=" + lakeName);
         }
         @Override
         protected String doInBackground(Void... urls) {
@@ -557,7 +563,7 @@ public class MapsActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             //Create dialog to allow user to choose to go to advisory activity
-            if(adviseName.equals("0")) {
+            if(adviseName == "0") {
                 AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
                 alertDialog.setTitle("Lake Information");
                 alertDialog.setMessage("Would you like to see more information about this lake? By clicking yes, you will be brought to a new page.");
