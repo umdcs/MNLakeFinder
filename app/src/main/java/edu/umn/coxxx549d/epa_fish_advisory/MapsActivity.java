@@ -1,6 +1,5 @@
 package edu.umn.coxxx549d.epa_fish_advisory;
 
-import android.*;
 import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
@@ -12,7 +11,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -29,7 +27,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -40,10 +37,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
@@ -63,8 +57,6 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static edu.umn.coxxx549d.epa_fish_advisory.R.id.url;
-
 
 public class MapsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback,
@@ -72,11 +64,12 @@ public class MapsActivity extends AppCompatActivity
 
     private static GoogleMap nMap;
     private static int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    public static String adviseName = "0";
+    static final String API_URL = "HTTP://services.dnr.state.mn.us/api/lakefinder/by_name/v1?name=";
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
     Location mCurrentLocation;
-    String mLastUpdateTime, adviseName;
-    static final String API_URL = "HTTP://services.dnr.state.mn.us/api/lakefinder/by_name/v1?name=";
+    String mLastUpdateTime;
     SearchView searchView;
 
     @Override
@@ -107,9 +100,10 @@ public class MapsActivity extends AppCompatActivity
         //Get the potential string extra for a lake name
         //and start a new lake search if there is a string extra
         Intent intent = getIntent();
-        adviseName = intent.getStringExtra("EXTRA_NAME");
-        if(adviseName != null) {
-            new RetrieveLakeTask();
+        adviseName = intent.getStringExtra(AdvisoryActivity.EXTRA_NAME);
+
+        if(!adviseName.equals("0")) {
+            new RetrieveLakeTask().execute();
         }
     }
 
@@ -229,7 +223,8 @@ public class MapsActivity extends AppCompatActivity
         nMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
         //Set padding
-        //nMap.setPadding(100, 0, 0, 0);
+        nMap.setPadding(0, 0, 0, 0);
+        //(left, 0, 0, bottom)
 
         TileProvider tileProvider = new UrlTileProvider(256, 256) {
             @Override
@@ -480,7 +475,7 @@ public class MapsActivity extends AppCompatActivity
      */
     class RetrieveLakeTask extends AsyncTask<Void, Void, String> {
 
-        String lakeName = searchView.getQuery().toString();
+        String lakeName;
         LatLng lakeLatLng;
 
         protected void onPreExecute() {
@@ -488,9 +483,11 @@ public class MapsActivity extends AppCompatActivity
             //adviseName will be null if we aren't coming from advisory activity
             if(adviseName != null) {
                 lakeName = adviseName;
+            } else {
+                lakeName = searchView.getQuery().toString();
             }
         }
-
+        @Override
         protected String doInBackground(Void... urls) {
 
             try{
@@ -525,27 +522,26 @@ public class MapsActivity extends AppCompatActivity
                 JSONObject jsonObj = new JSONObject(response);
                 JSONArray results = jsonObj.getJSONArray("results");
 
-                    JSONObject c = results.getJSONObject(1);
+                JSONObject c = results.getJSONObject(1);
 
-                    JSONObject point = c.getJSONObject("point");
+                JSONObject point = c.getJSONObject("point");
 
-                    //gets coordinates for lake
-                    String coord = point.getString("epsg:4326");
+                //gets coordinates for lake
+                String coord = point.getString("epsg:4326");
 
-                    //splits the two coordinate strings
-                    String array[] = coord.split(",");
+                //splits the two coordinate strings
+                String array[] = coord.split(",");
+                //replace extra characters left from JSON data
+                String Lat = array[0];
+                String Lon = array[1];
+                String tempLat = Lat.replace('[', ' ');
+                String tempLon = Lon.replace(']', ' ');
 
-                    //replace extra characters left from JSON data
-                    String Lat = array[0];
-                    String Lon = array[1];
-                    String tempLat = Lat.replace('[', ' ');
-                    String tempLon = Lon.replace(']', ' ');
-
-                    //parse strings to doubles
-                    //coordinates were reversed. Trust me, this works.
-                    Double lakeLon = Double.parseDouble(tempLat);
-                    Double lakeLat = Double.parseDouble(tempLon);
-                    lakeLatLng = new LatLng(lakeLat, lakeLon);
+                //parse strings to doubles
+                //coordinates were reversed. Trust me, this works.
+                Double lakeLon = Double.parseDouble(tempLat);
+                Double lakeLat = Double.parseDouble(tempLon);
+                lakeLatLng = new LatLng(lakeLat, lakeLon);
                 Log.d("lakeLat", lakeLat.toString());
                 Log.d("lakeLon", lakeLon.toString());
 
@@ -560,23 +556,25 @@ public class MapsActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             //Create dialog to allow user to choose to go to advisory activity
-            AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
-            alertDialog.setTitle("Lake Information");
-            alertDialog.setMessage("Would you like to see more information about this lake? By clicking yes, you will be brought to a new page.");
+            if(adviseName.equals("0")) {
+                AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
+                alertDialog.setTitle("Lake Information");
+                alertDialog.setMessage("Would you like to see more information about this lake? By clicking yes, you will be brought to a new page.");
 
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(MapsActivity.this, AdvisoryActivity.class);
-                    startActivity(intent);
-                    dialog.dismiss();
-                }
-            });
-            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            alertDialog.show();
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(MapsActivity.this, AdvisoryActivity.class);
+                        startActivity(intent);
+                        dialog.dismiss();
+                    }
+                });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                alertDialog.show();
+            }
         }
     }
 }
