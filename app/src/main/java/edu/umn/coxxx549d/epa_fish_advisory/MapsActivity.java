@@ -66,6 +66,7 @@ public class MapsActivity extends AppCompatActivity
     private static int LOCATION_PERMISSION_REQUEST_CODE = 1;
     public static String adviseName = "0";
     static final String API_URL = "HTTP://services.dnr.state.mn.us/api/lakefinder/by_name/v1?name=";
+    public final static String LAKE_EXTRA = "edu.umn.coxxx549d.epa_fish_advisory.NAME";
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
     Location mCurrentLocation;
@@ -564,6 +565,7 @@ public class MapsActivity extends AppCompatActivity
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(MapsActivity.this, AdvisoryActivity.class);
+                        intent.putExtra(LAKE_EXTRA, lakeName);
                         startActivity(intent);
                         dialog.dismiss();
                     }
