@@ -2,6 +2,7 @@
 Minnesota Fish Advisory/Lakefinder android app
 By Branton Fleischman, Daniel Niska, Dillon Cox
 
+All code developed on Android Studio version 2.2.2
 The master branch is a working branch that has all of the most updated code on it.
 
 The API this app uses and gets all of it's information from is the MN DNR Lakefinder API:
